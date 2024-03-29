@@ -9,7 +9,7 @@ from pandasai import SmartDataframe
 
 def get_bot_response(user_input):
     # Load Excel file into pandas DataFrame
-    excel_file = "C:/Users/leeyu/Downloads/UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
+    excel_file = "UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
     df = pd.read_excel(excel_file)
     agent = SmartDataframe(df)
     
