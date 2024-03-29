@@ -19,3 +19,6 @@ textColor = "#3B6467"
 
 # Font family for the page. (One of "serif", "sans serif" or "mono")
 font = "sans serif"
+
+[client]
+showSidebarNavigation = false
