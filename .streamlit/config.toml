@@ -9,13 +9,13 @@ base = "light"
 primaryColor = "#6FB3B8" 
 
 # Background color for the main container.
-# backgroundColor = "#F6F6F2"
+backgroundColor = "#F6F6F2"
 
 # Used as the background for most widgets (sidebar, text input etc.)
 # secondaryBackgroundColor =  "#EDEDED"
 
 # Font color for the page.
-# textColor = "#3B6467"
+textColor = "#3B6467"
 
 # Font family for the page. (One of "serif", "sans serif" or "mono")
-# font = "sans serif"
+font = "sans serif"

@@ -37,6 +37,4 @@ st.markdown(header_style, unsafe_allow_html=True)
 st.markdown('''<h1 style="font-size: 64px">Welcome</h1>''', unsafe_allow_html=True)
 st.markdown('''<h3 style="font-size: 24px">PHMIR is an AI chat-bot that provides personal finance assitance.</h3>''', unsafe_allow_html=True)
 
-getStarted_btn = st.button("Get Started →")
-if getStarted_btn:
-    st.page_link("frontend.py")
+st.page_link("pages/frontend.py", label="Get Started →")
