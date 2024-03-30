@@ -54,16 +54,19 @@ total_spent=df_selection["WITHDRAWAL AMT"].sum()
 #calculate balane
 current_balance=df["DEPOSIT AMT"].sum()-df["WITHDRAWAL AMT"].sum()
 
+# Determine color based on debt-to-income ratio value
+color = "green" if debt_to_income_ratio <= 0.35 else "red"
+
 left_column,middle_column,right_column=st.columns(3)
 with left_column:
      st.subheader("Debt-to-Income Ratio:")
-     st.subheader(f" {debt_to_income_ratio*100:.2f} %")
+     st.markdown(f'<span style="color:{color};font-size:30px;font-weight:bold;">{debt_to_income_ratio*100:.2f} %</span>', unsafe_allow_html=True)
 with middle_column:
-     st.subheader("Total Current Spent:")
-     st.subheader(f"$ {total_spent}")
+     st.subheader("Total Spent:")
+     st.subheader(f"RM {total_spent}")
 with right_column:
      st.subheader("Current Balance:")
-     st.subheader(f"$ {current_balance}")
+     st.subheader(f"RM {current_balance}")
 
 
 
