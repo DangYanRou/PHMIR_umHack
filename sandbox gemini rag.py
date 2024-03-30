@@ -319,17 +319,60 @@ with get_openai_callback() as cb:
     # print(cb)
     
     
-    
-
-
-
-
-
-
 
 
 #%%
 
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from PIL import Image
+
+def create_pdf(text_and_image_paths, output_file):
+    c = canvas.Canvas(output_file, pagesize=letter)
+    width, height = letter
+    y_coordinate = height - 50  # Initial y-coordinate for drawing elements
+
+    for item in text_and_image_paths:
+        if item.endswith('.jpg') or item.endswith('.jpeg') or item.endswith('.png') or item.endswith('.gif'):
+            # If item is an image, draw the image
+            try:
+                img = Image.open(item)
+                img_width, img_height = img.size
+                aspect = img_height / img_width
+                max_width = 400  # Adjust according to your needs
+                max_height = int(max_width * aspect)
+                
+                if y_coordinate - max_height < 50:
+                    c.showPage()  # New page
+                    y_coordinate = height - 50  # Reset y-coordinate
+                c.drawImage(item, 100, y_coordinate - max_height, width=max_width, height=max_height)
+                c.drawString(100, y_coordinate - max_height - 20, item)  # Display the image path below the image
+                y_coordinate -= max_height + 40  # Adjust y-coordinate for the next element
+            except Exception as e:
+                print(f"Error while processing image {item}: {e}")
+        else:
+            # If item is not an image, draw text
+            if y_coordinate < 50:
+                c.showPage()  # New page
+                y_coordinate = height - 50  # Reset y-coordinate
+            c.drawString(100, y_coordinate, item)
+            y_coordinate -= 20  # Adjust y-coordinate for the next element
+
+    c.save()
+
+# Example usage:
+text_and_image_paths = [
+    "This is some text.",
+    "C:\\Users\\szeyu\\Downloads\\20240320_144825.jpg",
+    "Another text.",
+    "C:\\Users\\szeyu\\Downloads\\20240320_150045.jpg",
+    "Last text.",
+    "text again",
+    "another text again"
+]
+
+output_file = "output.pdf"
+create_pdf(text_and_image_paths, output_file)
 
 
 
