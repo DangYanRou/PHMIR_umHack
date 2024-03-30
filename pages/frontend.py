@@ -113,10 +113,9 @@ def chat_with_openai(user_prompt, response):
         
         The output format will be the response from your last chat history and also your enhancement to the answer.
         
-        if not the user ask about his current data,
-        then just say if got more question can ask more.
+        If not, the user asks about his current data, if there are more questions, the user shall ask more.
         
-        else
+        Else,
         You are to act like a financial advisor.
         So if the user prompt ask more
         about future or trends stuff and the response to user is not that precise or good,
@@ -173,7 +172,7 @@ if prompt :
         st.markdown(prompt)
 
           # Get response from the bot
-    with st.spinner('Thinking...'):
+    with st.spinner('Loading...'):
         bot_response = get_bot_response(prompt)
         
   # Display assistant response in chat message container
@@ -192,9 +191,8 @@ if prompt :
          st.markdown("\n"+generated_response)
     st.session_state.messages.append({"role": "assistant", "content": generated_response})   
           
-           # Generate graph based on bot response
-    #if 'data' in response:
-       #data = response['data']
-    #fig = generate_graph(data)
-  #Display graph in Streamlit app
-       
+    # Generate graph based on bot response
+    if 'generate graph' in prompt.lower():
+        data = df  
+        fig = generate_graph(data)
+        st.plotly_chart(fig, use_container_width=True)
