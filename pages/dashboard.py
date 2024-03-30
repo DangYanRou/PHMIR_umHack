@@ -5,7 +5,7 @@ from datetime import datetime
 
 st.set_page_config(page_title="Financial Dashboard",page_icon=":barchart:",layout="wide")
 
-excel_file="C:/Users/leeyu/Downloads/UMH24 - FinTech Dataset.xlsx"
+excel_file="../UMH24 - FinTech Dataset.xlsx"
 df=pd.read_excel(excel_file)
 
 
