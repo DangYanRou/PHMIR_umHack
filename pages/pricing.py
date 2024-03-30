@@ -16,12 +16,6 @@ html_code = """
             padding: 20px;
         }
 
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
         .plan {
             background-color: #f4f4f4;
             border: 1px solid #ddd;
@@ -31,12 +25,6 @@ html_code = """
             max-width: 300px;
             width: 100%;
             box-sizing: border-box;
-        }
-
-        @media screen and (min-width: 768px) {
-            .plan {
-                width: calc(33.33% - 20px);
-            }
         }
 
         .plan h2 {
@@ -53,58 +41,53 @@ html_code = """
         .plan ul li {
             margin-bottom: 10px;
         }
-
-        .plan p {
-            margin: 10px 0;
-        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="plan">
-        <h2>Plan A: Free</h2>
-        <ul>
-            <li>Max file input size: 25MB</li>
-            <li>Prompts per day: 15</li>
-            <li>Access to prediction model: No</li>
-            <li>Supported file format: CSV</li>
-        </ul>
-    </div>
+<div class="plan">
+    <h2>Plan A: Free</h2>
+    <ul>
+        <li>Max file input size: 25MB</li>
+        <li>Prompts per day: 15</li>
+        <li>Access to prediction model: No</li>
+        <li>Supported file format: CSV</li>
+    </ul>
+</div>
 
-    <div class="plan">
-        <h2>Plan B: $15/month</h2>
-        <ul>
-            <li>Max file input size: 100MB</li>
-            <li>Prompts per day: 50</li>
-            <li>Access to prediction model: Yes</li>
-            <li>Supported file formats: CSV, XLSX</li>
-        </ul>
-    </div>
+<div class="plan">
+    <h2>Plan B: $15/month</h2>
+    <ul>
+        <li>Max file input size: 100MB</li>
+        <li>Prompts per day: 50</li>
+        <li>Access to prediction model: Yes</li>
+        <li>Supported file formats: CSV, XLSX</li>
+    </ul>
+</div>
 
-    <div class="plan">
-        <h2>Plan C: $30/month</h2>
-        <ul>
-            <li>Max file input size: 300MB</li>
-            <li>Prompts per day: 100</li>
-            <li>Access to prediction model: Yes</li>
-            <li>Supported file formats: CSV, PDF, DOCX, XLSX</li>
-        </ul>
-    </div>
+<div class="plan">
+    <h2>Plan C: $30/month</h2>
+    <ul>
+        <li>Max file input size: 300MB</li>
+        <li>Prompts per day: 100</li>
+        <li>Access to prediction model: Yes</li>
+        <li>Supported file formats: CSV, PDF, DOCX, XLSX</li>
+    </ul>
+</div>
 
-    <div class="plan">
-        <h2>Plan D: $40/month</h2>
-        <ul>
-            <li>Max file input size: 300MB</li>
-            <li>Prompts per day: 500</li>
-            <li>Access to prediction model: Yes</li>
-            <li>Supported file formats: CSV, PDF, DOCX, XLSX</li>
-        </ul>
-    </div>
+<div class="plan">
+    <h2>Plan D: $40/month</h2>
+    <ul>
+        <li>Max file input size: 300MB</li>
+        <li>Prompts per day: 500</li>
+        <li>Access to prediction model: Yes</li>
+        <li>Supported file formats: CSV, PDF, DOCX, XLSX</li>
+    </ul>
 </div>
 
 </body>
 </html>
+
 """
 
 
