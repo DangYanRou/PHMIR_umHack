@@ -22,9 +22,40 @@ from PIL import Image
 
 import matplotlib as plt
 
+import streamlit as st
+
+def main():
+    print("This is the main function.")
+
+if __name__ == "__main__":
+    main()
+
+st.set_page_config(layout="centered")
+
+# Define a function to load the selected page
+#def load_page(selected_page):
+#    if selected_page == "Home":
+#       st.title("Personal Finance Chatbot")  
+#    elif selected_page == "Dashboard":
+#        # Redirect to dashboard.py
+#        from dashboard import load_dashboard
+#        load_dashboard()
+#def load_page(selected_page):
+#    if selected_page == "Home":
+#        st.title("Personal Finance Chatbot")
+#    elif selected_page == "Dashboard":
+#        st.switch_page("pages/dashboard.py")
+
+# Create a horizontal menu with option_menu
+#selected_page = st.sidebar.selectbox("Main Menu", ["Home", "Dashboard"])
+st.title("Personal Finance Chatbot")
+
+# Load the selected page
+#load_page(selected_page)
+
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
-excel_file = "C:\\Users\\szeyu\\Desktop\\PC Document\\AI\\UMHackathon\\UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
+excel_file = "C:/Users/leeyu/Downloads/UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
 sheet_name = "Ahmad"
 #print(sys.argv[0])
 #file_path = sys.argv[2]
@@ -150,7 +181,7 @@ def generate_graph(data):
     plt.setp(ax.get_xticklabels(), rotation = 90)
     return fig
 
-st.title("Personal Finance Chatbot")
+
 if st.button("Save Chat as PDF"):
     create_pdf(st.session_state.messages, "chat.pdf")
 
