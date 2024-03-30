@@ -130,7 +130,8 @@ def submit_tool_outputs(thread_id, run_id, tools_to_call):
 def print_messages_from_thread(thread_id):
     messages = client.beta.threads.messages.list(thread_id=thread_id)
     for msg in messages:
-        st.session_state.messages.append({"role": "assistant", "content": msg})
+        st.markdown(msg.content[0].text.value)
+        st.session_state.messages.append({"role": "assistant", "content": msg.content[0].text.value})
         print(f"{msg.role}: {msg.content[0].text.value}")
         
         
