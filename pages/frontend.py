@@ -18,7 +18,8 @@ from pandasai import SmartDataframe
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
 excel_file = "UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
-file_path = sys.argv[2]
+#print(sys.argv[0])
+#file_path = sys.argv[2]
 
 df = pd.read_excel(excel_file, sheet_name=file_path)
 # conversational=False is supposed to display lower usage and cost

@@ -27,11 +27,11 @@ def page_5():
 
 # Dictionary to store user credentials and corresponding page names
 users = {
-    "ahmad": {"password": "password1", "page": Ahmad},
-    "bryan": {"password": "password2", "page": Bryan},
-    "charles": {"password": "password3", "page": Charles},
-    "danish": {"password": "password4", "page": Danish},
-    "emily": {"password": "password5", "page": Emily},
+    "ahmad": {"password": "password1", "page": "Page_1","Sheet":"Ahmad"},
+    "bryan": {"password": "password2", "page": "Page_2","Sheet":"Bryan"},
+    "charles": {"password": "password3", "page": "Page_3","Sheet":"Charles"},
+    "danish": {"password": "password4", "page": "Page_4","Sheet":"Danish"},
+    "emily": {"password": "password5", "page": "Page_5","Sheet":"Emily"},
 }
 
 
@@ -61,6 +61,7 @@ if st.button("Login"):
                 page_4()
             elif to_page == "Page 5":
                 page_5()
+            #subprocess.Popen([sys.executable,"/pages/frontend.py",username,users[username]["Sheet"]])
             st.switch_page("pages/frontend.py")
         else:
             st.error("Invalid password. Please try again.")
