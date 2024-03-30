@@ -20,6 +20,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from PIL import Image
 
+import matplotlib as plt
 
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
