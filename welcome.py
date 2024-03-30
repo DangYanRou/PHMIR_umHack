@@ -1,6 +1,6 @@
 import streamlit as st
-import subprocess
 # python -m streamlit run welcome.py
+
 primary = '#6fb3b8'
 background = '#f6f6f2'
 
@@ -23,8 +23,9 @@ st.markdown(header_style, unsafe_allow_html=True)
 
 st.markdown('''<h1 style="font-size: 72px">Welcome</h1>''', unsafe_allow_html=True)
 st.write("")
+st.write("")
 
 st.markdown('''<h3 style="font-size: 24px">PHMIR is an AI chat-bot that provides personal finance assitance.</h3>''', unsafe_allow_html=True)
 st.write("")
 
-st.page_link("pages/login.py", label="Get Started →")
+st.link_button("Get Started →", "/login", type="primary")
