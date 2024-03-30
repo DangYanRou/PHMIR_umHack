@@ -7,7 +7,7 @@ st.set_page_config(layout="wide")
 
 # Define a function to load the dashboard page
 
-excel_file="C:/Users/leeyu/Downloads/UMH24 - FinTech Dataset.xlsx"
+excel_file="../UMH24 - FinTech Dataset.xlsx"
 df=pd.read_excel(excel_file)
 
 #def load_page(selected_page):
