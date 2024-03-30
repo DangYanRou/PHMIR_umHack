@@ -1,4 +1,7 @@
 import streamlit as st
+import json
+from streamlit_lottie import st_lottie
+import requests
 st.set_page_config(layout="centered")
 st.title("Pricing")
 
@@ -89,6 +92,7 @@ html_code = """
 </html>
 
 """
+
 
 
 st.markdown(html_code, unsafe_allow_html=True)
