@@ -63,7 +63,7 @@ html_code = """
 </div>
 
 <div class="plan">
-    <h2>Plan B: $15/month</h2>
+    <h2>Plan B: RM15/month</h2>
     <ul>
         <li>Prompts per day: 50</li>
         <li>Access to prediction model: Yes</li>
@@ -71,7 +71,7 @@ html_code = """
 </div>
 
 <div class="plan">
-    <h2>Plan C: $30/month</h2>
+    <h2>Plan C: RM30/month</h2>
     <ul>
         <li>Prompts per day: 100</li>
         <li>Access to prediction model: Yes</li>
@@ -79,7 +79,7 @@ html_code = """
 </div>
 
 <div class="plan">
-    <h2>Plan D: $40/month</h2>
+    <h2>Plan D: RM40/month</h2>
     <ul>
         <li>Prompts per day: 500</li>
         <li>Access to prediction model: Yes</li>
