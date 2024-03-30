@@ -24,13 +24,14 @@ def to_markdown(text):
 #%%
 # Set the environment variable directly in the script
 os.environ["GEMINI_API_KEY"] = "AIzaSyCt0auU8CC-s8BuiNM4tWlhK3MFK181dZ0"
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 
 #%%
 
 gemini_api_key = os.environ.get("GEMINI_API_KEY")
 print(gemini_api_key)
-
+openai_api_key = os.environ.get("OPENAI_API_KEY")
+print(openai_api_key)
 
 #%%
 
@@ -173,7 +174,7 @@ llm = OpenAI()
 # conversational=False is supposed to display lower usage and cost
 df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
-user_prompt = "Can you show my last 5 transactions record?"
+user_prompt = "Based on my expenses,what expenses can I cut down to save more money"
 
 with get_openai_callback() as cb:
     response = df.chat("""The user prompt:""" + user_prompt + """
@@ -193,31 +194,110 @@ with get_openai_callback() as cb:
                         """)
 
     print(response)
+    # print(cb)
     
     
-    
-    print(cb)
     
 
 
 #%%
 
+# gets API Key from environment variable OPENAI_API_KEY
+client = OpenAI()
+
+print(user_prompt)
+print(response)
+
+try:
+
+    prompt = "The user prompt: " + user_prompt + "The response to user: " + response + """So if the user prompt ask more
+    about future or trends stuff and the response to user is not that precise or good, you can respond more details
+    if not applicable such that the user ask about his current data, then just say if got more question can ask more."""
+    
+    completion = client.chat.completions.create(
+        model="gpt-4",
+        prompt=prompt,
+    )
+    print(completion.choices[0].message.content)
+
+except:
+    print("If you got more question feel free to ask more")
+
+#%%
+
+import openai
+
+def chat_with_openai(user_prompt, response):
+    try:
+        prompt = "The user prompt: " + user_prompt + "The response to user: " + response + """
+        You are to act like a financial advisor.
+        So if the user prompt ask more
+        about future or trends stuff and the response to user is not that precise or good, you can respond more details
+        if not applicable such that the user ask about his current data, then just say if got more question can ask more."""
+        
+        completion = openai.completions.create(
+            model="gpt-3.5-turbo-instruct",
+            prompt=prompt,
+            temperature=0.7,
+            max_tokens=200
+        )
+        
+        return completion.choices[0].text.strip()
+
+    except Exception as e:
+        print("An error occurred:", e)
+        return "If you have more questions, feel free to ask."
+
+
+print("User prompt:", user_prompt)
+print("Response:", response)
+
+generated_response = chat_with_openai(user_prompt, response)
+print(generated_response)
+
+
+
 
 
 
 #%%
 
 
+from pandasai import SmartDataframe
+from pandasai.llm import OpenAI
+from pandasai.helpers.openai_info import get_openai_callback
+import pandasai.pandas as pd
+
+llm = OpenAI()
 
 
+# conversational=False is supposed to display lower usage and cost
+df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
+user_prompt = "Can you give me suggestion on how to save more money?"
 
+with get_openai_callback() as cb:
+    response = df.chat("""The user prompt:""" + user_prompt + """
+                       
+                       The money format must be 2 decimal places
+                       If user prompt about future or trends, then
+                       State out what it is look like for the past spending data (Summary)
+                       Given your past spending data, let's predict your expenses for the upcoming month. Please provide the following information:
 
+                        1. Your total income for the month.
+                        2. Any known fixed expenses (rent/mortgage, utilities, insurance, etc.).
+                        3. Average monthly spending on variable expenses (groceries, dining out, entertainment, etc.).
+                        4. Any upcoming one-time expenses (travel, major purchases, etc.).
+                        5. Savings goals or investment contributions for the month.
+                        
+                        Based on this data, the model will generate a more accurate prediction of your spending for the next month. Additionally, it will offer suggestions or insights to help you manage your finances effectively.
+                        """)
 
-#%%
-
-
-
+    print(response)
+    # print(cb)
+    
+    
+    
 
 
 
