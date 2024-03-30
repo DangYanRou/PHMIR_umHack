@@ -37,6 +37,8 @@ if start_date and end_date:
 st.title(":bar_chart: Financial Dashboard")
 st.markdown("##")
 
+
+
 #Finacial Health KPI
 # Filter the DataFrame for transactions in the current month
 # Convert the 'DATE' column to datetime format
@@ -78,6 +80,9 @@ with right_column:
 
 
 
+
+
+df_selection
 st.markdown("---")    
 #total spent by category
 total_spent_category=(df_selection.groupby(by=["CATEGORY"]).sum()[["WITHDRAWAL AMT"]])

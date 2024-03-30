@@ -14,7 +14,7 @@ from pandasai.llm import OpenAI
 from pandasai.helpers.openai_info import get_openai_callback
 import pandasai.pandas as pd
 
-os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
+os.environ["PANDASAI_API_KEY"] = "$2a$10$CdohWuyNcKP.6014GcKCLe.0vffo9whvO9EaHxhIshdHj7mkl0qv6"
 os.environ["OPENAI_API_KEY"] = "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"
 tavily_client = TavilyClient(api_key="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")
 
