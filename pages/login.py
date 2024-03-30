@@ -61,8 +61,8 @@ if st.button("Login"):
                 page_4()
             elif to_page == "Page 5":
                 page_5()
-            #subprocess.Popen([sys.executable,"/pages/frontend.py",username,users[username]["Sheet"]])
-            st.switch_page("pages/frontend.py")
+            #subprocess.Popen([sys.executable,"/pages/Home.py",username,users[username]["Sheet"]])
+            st.switch_page("pages/Home.py")
         else:
             st.error("Invalid password. Please try again.")
     else:

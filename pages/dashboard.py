@@ -3,11 +3,19 @@ import plotly.express as px
 import streamlit as st
 from datetime import datetime
 
-st.set_page_config(page_title="Financial Dashboard",page_icon=":barchart:",layout="wide")
+st.set_page_config(layout="wide")
+
+# Define a function to load the dashboard page
 
 excel_file="../UMH24 - FinTech Dataset.xlsx"
 df=pd.read_excel(excel_file)
 
+#def load_page(selected_page):
+#     if selected_page == "Home":
+#          st.switch_page("Home.py")
+#     elif selected_page == "Dashboard":
+#          st.set_page_config(layout="wide")
+          
 
 
 #----- side bar
@@ -25,7 +33,7 @@ if start_date and end_date:
      df_selection = df_selection[(df_selection["DATE"] >= start_date) & (df_selection["DATE"] <= end_date)]
 
 
-#mainpagr
+#mainpage
 st.title(":bar_chart: Financial Dashboard")
 st.markdown("##")
 
@@ -60,7 +68,7 @@ color = "green" if debt_to_income_ratio <= 0.35 else "red"
 left_column,middle_column,right_column=st.columns(3)
 with left_column:
      st.subheader("Debt-to-Income Ratio:")
-     st.markdown(f'<span style="color:{color};font-size:30px;font-weight:bold;">{debt_to_income_ratio*100:.2f} %</span>', unsafe_allow_html=True)
+     st.markdown(f'<span style="color:{color};font-size:30px;font-weight:bold;">{debt_to_income_ratio*100:.2f} % :smile:</span>', unsafe_allow_html=True)
 with middle_column:
      st.subheader("Total Spent:")
      st.subheader(f"RM {total_spent}")
@@ -71,9 +79,26 @@ with right_column:
 
 
 st.markdown("---")    
-#total spent by categor
+#total spent by category
 total_spent_category=(df_selection.groupby(by=["CATEGORY"]).sum()[["WITHDRAWAL AMT"]])
-total_spent_category_sorted = total_spent_category.sort_values(by="WITHDRAWAL AMT", ascending=False)
+total_spent_category_sorted = total_spent_category.sort_values(by="WITHDRAWAL AMT", ascending=True)
      
 fig_category=px.bar(total_spent_category,x=total_spent_category.index,y="WITHDRAWAL AMT", orientation="v",title="<b>Total Spent by Category</b>",color_discrete_sequence=["#0083B8"]*len(total_spent_category_sorted),template="plotly_white",)
+fig_category.update_layout(yaxis_title="Total Withdrawal Amount",width=1200,height=600,)
 st.plotly_chart(fig_category)
+
+# Filter the DataFrame to include only rows where the Category is "Other Expenses"
+other_expenses_df=df_selection[df_selection["CATEGORY"]=="Other Expenses"]
+
+# Sort the DataFrame by the "Transaction Details" column in ascending order
+other_expenses_df_sorted = other_expenses_df.sort_values(by="TRANSACTION DETAILS",ascending=True)
+grouped_df=other_expenses_df_sorted.groupby("TRANSACTION DETAILS")["WITHDRAWAL AMT"].sum().reset_index()
+
+#Create a plot using Plotly Express
+fig=px.bar(grouped_df,x="TRANSACTION DETAILS",y="WITHDRAWAL AMT",title="Other Expenses Breakdown",labels={"Transaction Details":"Subcategory","Withdrawal Amount":"Total Withdrawal Amount"})
+
+# Customize the layout if needed
+fig.update_layout(xaxis_title="Subcategory", yaxis_title="Total Withdrawal Amount",width=1200,height=600,)
+
+# Display the plot
+st.plotly_chart(fig)
