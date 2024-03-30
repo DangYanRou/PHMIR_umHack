@@ -56,6 +56,9 @@ import pandas as pd
 excel_file = "UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
 df = pd.read_excel(excel_file)
 
+df[['WITHDRAWAL AMT', 'DEPOSIT AMT']] = df[['WITHDRAWAL AMT', 'DEPOSIT AMT']].fillna(0)
+# Set 'DATE' column as the index
+df.set_index('DATE', inplace=True)
 
 #%%
 
@@ -142,8 +145,9 @@ sales_by_country = pd.DataFrame({
 
 # Get your FREE API key signing up at https://pandabi.ai.
 # You can also configure it in your .env file.
-# os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
-os.environ["PANDASAI_API_KEY"] = "$2a$10$Psgcj0HiVxCmEscv1W5Dc.BorjRmFuaQppP4iXmtExYi0Ljyum2em"
+#os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
+#os.environ["PANDASAI_API_KEY"] = "$2a$10$Psgcj0HiVxCmEscv1W5Dc.BorjRmFuaQppP4iXmtExYi0Ljyum2em"
+os.environ["PANDASAI_API_KEY"] = "$2a$10$jzND9rotf5OzcsFm3BcbL.BfoW/oDxmmgCvuAPeJhC1kcG9zOb9eK"
 
 #%%
 agent = SmartDataframe(sales_by_country)
@@ -158,9 +162,58 @@ df_pandasai = SmartDataframe(df)
 
 #%%
 
-df_pandasai.chat("How much did I spend on 2024-01-01?")
+df_pandasai.chat("Can you tell me what is my saving trends?")
+
+#%%
+from pandasai import Agent
+
+agent = Agent(df);
 
 
+# Train the model
+query = "What is the total sales for the current fiscal year?"
+response = """
+import pandas as pd
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
+
+df[['WITHDRAWAL AMT', 'DEPOSIT AMT']] = df[['WITHDRAWAL AMT', 'DEPOSIT AMT']].fillna(0)
+# Set 'DATE' column as the index
+df.set_index('DATE', inplace=True)
+
+withdrawals = df['WITHDRAWAL AMT']
+
+# Fit an ARIMA model
+model = ARIMA(withdrawals, order=(5,1,1))  # Example ARIMA model, you may need to tune parameters
+model_fit = model.fit()
+
+# Make forecasts for the next 7 days
+forecast_values = model_fit.forecast(steps=7)
+
+
+# Plot original time series data
+plt.plot(withdrawals.index, withdrawals, label='Original Data')
+
+# Plot forecasted values
+forecast_index = pd.date_range(withdrawals.index[-1], periods=8)[1:]  # Forecasted index for the next 7 days
+plt.plot(forecast_index, forecast_values, color='red', linestyle='--', label='Forecast')
+
+# Add labels and legend
+plt.xlabel('Date')
+plt.ylabel('Net Amount')
+plt.title('Forecast')
+plt.legend()
+
+# Show plot
+plt.show()
+
+"""
+agent.train(queries=[query], codes=[response])
+
+
+
+response = agent.chat("Can you tell me what is my saving trends?")
+print(response)
 
 
 
@@ -293,7 +346,7 @@ llm = OpenAI()
 # conversational=False is supposed to display lower usage and cost
 df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
-user_prompt = "I wish to save for a Tesla. Which part of budget can I reduce to save for it?"
+user_prompt = "Can you tell me what is my saving trends?"
 
 with get_openai_callback() as cb:
     response = df.chat("""The user prompt:""" + user_prompt + """
@@ -381,9 +434,46 @@ create_pdf(text_and_image_paths, output_file)
 
 
 #%%
+import pandas as pd
+from statsmodels.tsa.arima.model import ARIMA
+import matplotlib.pyplot as plt
 
+def getTrend(df, category=None):
+    
+    if category == None:
+        withdrawals = df['WITHDRAWAL AMT']
+    else:
+        withdrawals = df.loc[df['CATEGORY'] == category, 'WITHDRAWAL AMT']
+    
+    # Fit an ARIMA model
+    model = ARIMA(withdrawals, order=(5,1,1))  # Example ARIMA model, you may need to tune parameters
+    model_fit = model.fit()
+    
+    # Make forecasts for the next 7 days
+    forecast_values = model_fit.forecast(steps=7)
+    
+    
+    # Plot original time series data
+    plt.plot(withdrawals.index, withdrawals, label='Original Data')
+    
+    # Plot forecasted values
+    forecast_index = pd.date_range(withdrawals.index[-1], periods=8)[1:]  # Forecasted index for the next 7 days
+    plt.plot(forecast_index, forecast_values, color='red', linestyle='--', label='Forecast')
+    
+    # Add labels and legend
+    plt.xlabel('Date')
+    plt.ylabel('Net Amount')
+    plt.title('Forecast')
+    plt.legend()
+    
+    # Show plot
+    plt.show()
 
+#print(forecast_values)
 
+#%%
+
+getTrend(df, 'Investment')
 
 
 

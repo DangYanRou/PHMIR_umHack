@@ -20,7 +20,10 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from PIL import Image
 
-import matplotlib as plt
+import matplotlib.pyplot as plt
+
+# for time series analysis
+from statsmodels.tsa.arima.model import ARIMA
 
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
@@ -30,8 +33,64 @@ sheet_name = "Ahmad"
 #file_path = sys.argv[2]
 
 df = pd.read_excel(excel_file, sheet_name)
+
+# drop the unnecessary transaction ID
+df.drop(columns="TRANSACTION ID", inplace=True)
+
+# fill the NaN with 0
+df[['WITHDRAWAL AMT', 'DEPOSIT AMT']] = df[['WITHDRAWAL AMT', 'DEPOSIT AMT']].fillna(0)
+
+# Set 'DATE' column as the index
+df.set_index('DATE', inplace=True)
+
 # conversational=False is supposed to display lower usage and cost
 df = SmartDataframe(df, config={"llm": llm, "conversational": False})
+
+
+def getTrend(category=None):
+    dfTemp = pd.read_excel(excel_file, sheet_name)
+
+    # drop the unnecessary transaction ID
+    dfTemp.drop(columns="TRANSACTION ID", inplace=True)
+
+    # fill the NaN with 0
+    dfTemp[['WITHDRAWAL AMT', 'DEPOSIT AMT']] = dfTemp[['WITHDRAWAL AMT', 'DEPOSIT AMT']].fillna(0)
+
+    # Set 'DATE' column as the index
+    dfTemp.set_index('DATE', inplace=True)
+    
+    if category == None:
+        withdrawals = dfTemp['WITHDRAWAL AMT']
+    else:
+        withdrawals = dfTemp.loc[dfTemp['CATEGORY'] == category, 'WITHDRAWAL AMT']
+    
+    # Fit an ARIMA model
+    model = ARIMA(withdrawals, order=(5,1,1))  # Example ARIMA model, you may need to tune parameters
+    model_fit = model.fit()
+    
+    # Make forecasts for the next 7 days
+    forecast_values = model_fit.forecast(steps=7)
+    
+    
+    # Plot original time series data
+    plt.plot(withdrawals.index, withdrawals, label='Original Data')
+    
+    # Plot forecasted values
+    forecast_index = pd.date_range(withdrawals.index[-1], periods=8)[1:]  # Forecasted index for the next 7 days
+    plt.plot(forecast_index, forecast_values, color='red', linestyle='--', label='Forecast')
+    
+    # Add labels and legend
+    plt.xlabel('Date')
+    plt.ylabel('Net Amount')
+    plt.title('Forecast')
+    plt.legend()
+    
+    # Show plot
+    #plt.show()
+    
+    fig = plt.gcf()
+    st.pyplot(fig)
+    
 
 def create_pdf(text_and_image_paths, output_file):
     c = canvas.Canvas(output_file, pagesize=letter)
@@ -94,9 +153,44 @@ def create_pdf(text_and_image_paths, output_file):
                     y_coordinate -= margin  # Adjust y-coordinate for the next line
             
     c.save()
-    
 
-def get_bot_response(user_input):
+def chatbot_future(prompt):
+    flag = False
+    categories = ['Income/Salary', 'Utilities', 'Other Expenses', 'Government Services', 
+                  'Groceries', 'Insurance', 'Dining', 'Health & Fitness', 'Entertainment', 
+                  'Transportation', 'Debts/Overpayments', 'Education', 'Shopping', 
+                  'Savings', 'Investment', 'Travel']
+    
+    for category in categories:
+        keywords = {'Income/Salary': ['income', 'salary'],
+                    'Utilities': ['utilities', 'utility'],
+                    'Other Expenses': ['other expenses','other expense'],
+                    'Government Services': ['government services','government'],
+                    'Groceries': ['groceries','grocery'],
+                    'Insurance': ['insurance'],
+                    'Dining': ['dining','eat'],
+                    'Health & Fitness': ['health', 'fitness'],
+                    'Entertainment': ['entertainment','relaxation','enjoy'],
+                    'Transportation': ['transportation','transport'],
+                    'Debts/Overpayments': ['debts', 'overpayments'],
+                    'Education': ['education'],
+                    'Shopping': ['shopping'],
+                    'Savings': ['savings','saving'],
+                    'Investment': ['investment','invest'],
+                    'Travel': ['travel']}
+        
+        for keyword in keywords[category]:
+            if keyword in prompt.lower():
+                getTrend(category)
+                flag = True
+                break;
+        
+    if(not flag):
+        getTrend();
+
+
+
+def chatbot_current(user_input):
    
     agent = SmartDataframe(df)
     # Get response from the agent
@@ -111,17 +205,8 @@ def chat_with_openai(user_prompt, response):
     try:
         
         prompt = """
-        
-        The output format will be the response from your last chat history and also your enhancement to the answer.
-        
-        If not, the user asks about his current data, if there are more questions, the user shall ask more.
-        
-        Else,
-        You are to act like a financial advisor.
-        So if the user prompt ask more
-        about future or trends stuff and the response to user is not that precise or good,
         you can respond more details
-        
+        else if nothing to comment can just say If you have more questions, feel free to ask.
         """
         
         messages = [{"role": "user", "content": user_prompt},
@@ -174,23 +259,36 @@ if prompt :
 
           # Get response from the bot
     with st.spinner('Loading...'):
-        bot_response = get_bot_response(prompt)
-        
+        #bot_response = chatbot_current(prompt)
+        pass
+    
   # Display assistant response in chat message container
     with st.chat_message("assistant"):
-         response = get_bot_response(prompt)
-         # to conver the response to string in case it is a data frame
-         if isinstance(response, pd.DataFrame):
-             response = response.to_string(index=False)
-             
-         # if the pandasai fail to analyse the prompt then don't output it
-         if not ("Unfortunately" in response or "error" in response or "was not able to answer" in response):
-             st.session_state.messages.append({"role": "assistant", "content": response})
-             st.markdown(response)
-             
-         generated_response = chat_with_openai(prompt, response)
-         st.markdown("\n"+generated_response)
-    st.session_state.messages.append({"role": "assistant", "content": generated_response})   
+        generated_response = ""
+        
+        # if the users ask about trends
+        if any(keyword in prompt.lower() for keyword in ["trend", "future", "predict", "prediction", "forecast"]):
+            chatbot_future(prompt)
+            
+        # if the users ask about recommendation
+        elif any(keyword in prompt.lower() for keyword in ["recommendation", "suggestion", "recommend", "suggest"]):
+            pass
+        
+        # send the users current data analysis
+        else:
+            response = chatbot_current(prompt)
+            # to conver the response to string in case it is a data frame
+            if isinstance(response, pd.DataFrame):
+                response = response.to_string(index=False)
+                
+            # if the pandasai fail to analyse the prompt then don't output it
+            if not ("Unfortunately" in response or "error" in response or "was not able to answer" in response):
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                st.markdown(response)
+                
+            generated_response = chat_with_openai(prompt, response)
+            st.markdown("\n"+generated_response)
+        st.session_state.messages.append({"role": "assistant", "content": generated_response})   
           
     # Generate graph based on bot response
     if 'generate graph' in prompt.lower():
