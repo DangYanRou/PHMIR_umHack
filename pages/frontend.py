@@ -24,7 +24,7 @@ import matplotlib as plt
 
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
-excel_file = "C:\\Users\\szeyu\\Desktop\\PC Document\\AI\\UMHackathon\\UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
+excel_file = "../UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
 sheet_name = "Ahmad"
 #print(sys.argv[0])
 #file_path = sys.argv[2]
