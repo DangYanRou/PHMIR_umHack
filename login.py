@@ -27,11 +27,11 @@ def page_5():
 
 # Dictionary to store user credentials and corresponding page names
 users = {
-    "ahmad": {"password": "password1", "page": "Page 1"},
-    "bryan": {"password": "password2", "page": "Page 2"},
-    "charles": {"password": "password3", "page": "Page 3"},
-    "danish": {"password": "password4", "page": "Page 4"},
-    "emily": {"password": "password5", "page": "Page 5"},
+    "ahmad": {"password": "password1", "page": Ahmad},
+    "bryan": {"password": "password2", "page": Bryan},
+    "charles": {"password": "password3", "page": Charles},
+    "danish": {"password": "password4", "page": Danish},
+    "emily": {"password": "password5", "page": Emily},
 }
 
 

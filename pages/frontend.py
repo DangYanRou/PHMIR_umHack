@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 import openai
+import sys
 
 from pandasai import SmartDataframe
 from pandasai.llm import OpenAI
@@ -17,7 +18,9 @@ from pandasai import SmartDataframe
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
 excel_file = "UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
-df = pd.read_excel(excel_file)
+file_path = sys.argv[2]
+
+df = pd.read_excel(excel_file, sheet_name=file_path)
 # conversational=False is supposed to display lower usage and cost
 df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
