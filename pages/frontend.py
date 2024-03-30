@@ -145,7 +145,9 @@ def chat_with_openai(user_prompt, response):
 # Function to generate graph
 def generate_graph(data):
     # Use Plotly Express to create a simple bar chart
+    fig, ax = plt.subplots(figsize = (1200, 600))
     fig = px.bar(data, x='Category', y='Amount', title='Expenses by Category')
+    plt.setp(ax.get_xticklabels(), rotation = 90)
     return fig
 
 st.title("Personal Finance Chatbot")
