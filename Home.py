@@ -15,7 +15,7 @@ from pandasai.helpers.openai_info import get_openai_callback
 import pandasai.pandas as pd
 
 os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 tavily_client = TavilyClient(api_key="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")
 
 import pandas as pd
@@ -32,13 +32,13 @@ import matplotlib.pyplot as plt
 # for time series analysis
 from statsmodels.tsa.arima.model import ARIMA
 
-
+st.set_page_config(layout="centered")
 
 
 
 llm = OpenAI()
  # Load Excel file into pandas DataFrame
-excel_file = "../UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
+excel_file = "C:/Users/leeyu/Downloads/UMH24 - FinTech Dataset.xlsx"  # Replace with your file path
 sheet_name = "Ahmad"
 #print(sys.argv[0])
 #file_path = sys.argv[2]
@@ -59,7 +59,7 @@ df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
 
 
-client = openai.OpenAI(api_key="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")
+client = openai.OpenAI(api_key="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") 
 # Create an assistant
 assistant = client.beta.assistants.create(
     instructions="""You are a finance expert. 
