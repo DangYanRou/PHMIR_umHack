@@ -138,11 +138,14 @@ sales_by_country = pd.DataFrame({
     "country": ["United States", "United Kingdom", "France", "Germany", "Italy", "Spain", "Canada", "Australia", "Japan", "China"],
     "sales": [5000, 3200, 2900, 4100, 2300, 2100, 2500, 2600, 4500, 7000]
 })
+#%%
 
 # Get your FREE API key signing up at https://pandabi.ai.
 # You can also configure it in your .env file.
-os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
+# os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
+os.environ["PANDASAI_API_KEY"] = "$2a$10$Psgcj0HiVxCmEscv1W5Dc.BorjRmFuaQppP4iXmtExYi0Ljyum2em"
 
+#%%
 agent = SmartDataframe(sales_by_country)
 agent.chat('Which are the top 5 countries by sales?')
 
@@ -214,7 +217,7 @@ try:
     about future or trends stuff and the response to user is not that precise or good, you can respond more details
     if not applicable such that the user ask about his current data, then just say if got more question can ask more."""
     
-    completion = client.chat.completions.create(
+    completion = client.completions.create(
         model="gpt-4",
         prompt=prompt,
     )
@@ -228,35 +231,51 @@ except:
 import openai
 
 def chat_with_openai(user_prompt, response):
+    if isinstance(response, pd.DataFrame):
+        response = response.to_string(index=False)
     try:
-        prompt = "The user prompt: " + user_prompt + "The response to user: " + response + """
+        
+        prompt = """
+        
+        The output format will be the response from your last chat history and also your enhancement to the answer.
+        
+        if not the user ask about his current data,
+        then just say if got more question can ask more.
+        
+        else
         You are to act like a financial advisor.
         So if the user prompt ask more
-        about future or trends stuff and the response to user is not that precise or good, you can respond more details
-        if not applicable such that the user ask about his current data, then just say if got more question can ask more."""
+        about future or trends stuff and the response to user is not that precise or good,
+        you can respond more details
         
-        completion = openai.completions.create(
-            model="gpt-3.5-turbo-instruct",
-            prompt=prompt,
+        """
+        
+        messages = [{"role": "user", "content": user_prompt},
+                    {"role": "assistant", "content": response},
+                    {"role": "assistant", "content": prompt}]
+        
+        completion = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=messages,
             temperature=0.7,
             max_tokens=200
         )
         
-        return completion.choices[0].text.strip()
+        return completion.choices[0].message.content
 
     except Exception as e:
         print("An error occurred:", e)
         return "If you have more questions, feel free to ask."
 
+#%%
 
 print("User prompt:", user_prompt)
 print("Response:", response)
 
+#%%
+
 generated_response = chat_with_openai(user_prompt, response)
 print(generated_response)
-
-
-
 
 
 
@@ -274,11 +293,11 @@ llm = OpenAI()
 # conversational=False is supposed to display lower usage and cost
 df = SmartDataframe(df, config={"llm": llm, "conversational": False})
 
-user_prompt = "Can you give me suggestion on how to save more money?"
+user_prompt = "I wish to save for a Tesla. Which part of budget can I reduce to save for it?"
 
 with get_openai_callback() as cb:
     response = df.chat("""The user prompt:""" + user_prompt + """
-                       
+
                        The money format must be 2 decimal places
                        If user prompt about future or trends, then
                        State out what it is look like for the past spending data (Summary)
@@ -292,8 +311,11 @@ with get_openai_callback() as cb:
                         
                         Based on this data, the model will generate a more accurate prediction of your spending for the next month. Additionally, it will offer suggestions or insights to help you manage your finances effectively.
                         """)
-
-    print(response)
+    if not ("Unfortunately" in response or "error" in response or "was not able to answer" in response):
+        print(response)
+    generated_response = chat_with_openai(user_prompt, response)
+    
+    print(generated_response)
     # print(cb)
     
     
