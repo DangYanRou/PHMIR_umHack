@@ -23,8 +23,8 @@ def to_markdown(text):
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 #%%
 # Set the environment variable directly in the script
-os.environ["GEMINI_API_KEY"] = "AIzaSyCt0auU8CC-s8BuiNM4tWlhK3MFK181dZ0"
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["GEMINI_API_KEY"] = ""
+os.environ["OPENAI_API_KEY"] = ""
 
 #%%
 
@@ -145,9 +145,7 @@ sales_by_country = pd.DataFrame({
 
 # Get your FREE API key signing up at https://pandabi.ai.
 # You can also configure it in your .env file.
-#os.environ["PANDASAI_API_KEY"] = "$2a$10$YWEW2uYAvqkP/n3sucIwY.cTG4OhViG72IxL4WWdjvaaM6Vs9yLtq"
-#os.environ["PANDASAI_API_KEY"] = "$2a$10$Psgcj0HiVxCmEscv1W5Dc.BorjRmFuaQppP4iXmtExYi0Ljyum2em"
-os.environ["PANDASAI_API_KEY"] = "$2a$10$jzND9rotf5OzcsFm3BcbL.BfoW/oDxmmgCvuAPeJhC1kcG9zOb9eK"
+os.environ["PANDASAI_API_KEY"] = ""
 
 #%%
 agent = SmartDataframe(sales_by_country)
